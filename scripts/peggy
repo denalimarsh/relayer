@@ -9,7 +9,7 @@ if [[ ! -d $GOPATH ]] || [[ ! -d $GOBIN ]] || [[ ! -x "$(which go)" ]]; then
 fi
 
 GAIA_REPO="$GOPATH/src/github.com/cosmos/gaia"
-PEGGY_REPO="$GOPATH/src/github.com/cosmos/peggy"
+PEGGY_REPO="$GOPATH/src/github.com/denalimarsh/peggy"
 GAIA_BRANCH=master
 PEGGY_BRANCH=dm-integrate-ibc
 CHAIN_DATA="$(pwd)/data"
@@ -78,10 +78,10 @@ if [[ -d $PEGGY_REPO ]]; then
 
   # remote build syncs with remote then builds
   if [[ "$1" == "local" ]]; then
-    echo "Using local version of github.com/cosmos/peggy"
+    echo "Using local version of github.com/denalimarsh/peggy"
     make install &> /dev/null
   else
-    echo "Building github.com/cosmos/peggy@$PEGGY_BRANCH..."
+    echo "Building github.com/denalimarsh/peggy@$PEGGY_BRANCH..."
     if [[ ! -n $(git status -s) ]]; then
       # sync with remote $PEGGY_BRANCH
       git fetch --all &> /dev/null
@@ -89,18 +89,19 @@ if [[ -d $PEGGY_REPO ]]; then
       # ensure the peggy repository successfully pulls the latest $PEGGY_BRANCH
       if [[ -n $(git checkout $PEGGY_BRANCH -q) ]] || [[ -n $(git pull origin $PEGGY_BRANCH -q) ]]; then
         echo "failed to sync remote branch $PEGGY_BRANCH"
-        echo "in $PEGGY_REPO, please rename the remote repository github.com/cosmos/peggy to 'origin'"
+        echo "in $PEGGY_REPO, please rename the remote repository github.com/denalimarsh/peggy to 'origin'"
         exit 1
       fi
 
       # install
       make install &> /dev/null
 
+      # TODO: Peggy ebd version --long' is broken
       # ensure that built binary has the same version as the repo
-      if [[ ! "$(ebd version --long 2>&1 | grep "commit:" | sed 's/commit: //g')" == "$(git rev-parse HEAD)" ]]; then
-        echo "built version of ebd commit doesn't match"
-        exit 1
-      fi 
+      # if [[ ! "$(ebd version --long 2>&1 | grep "commit:" | sed 's/commit: //g')" == "$(git rev-parse HEAD)" ]]; then
+      #   echo "built version of ebd commit doesn't match"
+      #   exit 1
+      # fi 
     else
       echo "uncommited changes in $PEGGY_REPO, please commit or stash before building"
       exit 1
@@ -110,7 +111,7 @@ if [[ -d $PEGGY_REPO ]]; then
 else 
   echo "$PEGGY_REPO doesn't exist, and you may not have have the peggy repo locally,"
   echo "if you want to download peggy to your \$GOPATH try running the following command:"
-  echo "mkdir -p $(dirname $PEGGY_REPO) && git clone git@github.com:cosmos/peggy $PEGGY_REPO"
+  echo "mkdir -p $(dirname $PEGGY_REPO) && git clone git@github.com:denalimarsh/peggy $PEGGY_REPO"
 fi
 
 chainid0=ibc0
