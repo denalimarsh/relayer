@@ -10,7 +10,7 @@ fi
 
 GAIA_REPO="$GOPATH/src/github.com/cosmos/gaia"
 PEGGY_REPO="$GOPATH/src/github.com/denalimarsh/peggy"
-GAIA_BRANCH=master
+GAIA_BRANCH=50be36de941b9410a4b06ec9ce4288b1529c4bd4
 PEGGY_BRANCH=dm-integrate-ibc
 CHAIN_DATA="$(pwd)/data"
 
